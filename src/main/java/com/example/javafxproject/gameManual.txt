@@ -1,0 +1,11 @@
+------------------------------- Game Instructions -------------------------------
+
+You're a sight-impaired amphibian, but you have a good hear! Reach the top side
+of the pond, row by row of water lilies. Each row represents a stage where you
+must make a choice: you can decide which water lily to jump to for the next row or
+attempt to eat any potential insects on the current water lily.
+
+Eat insects make you grow. Press 'e' to eat;
+To quit the game press 'p'.
+
+
