@@ -27,11 +27,11 @@ import static java.lang.Math.random;
 public class GameApplication extends Application {
 
     final static String WATERLILIES_IMG_URL = "/waterlily_from_high.png";
-    final static Vector2Int WATERLILY_IMG_SIZE = new Vector2Int(200,200);
+    final static Vector2Int WATERLILY_IMG_SIZE = new Vector2Int(20,20);
 
     final static String PLAYER_IMG_URL = "/final_frog_assis.png";
 
-    final static Vector2Int PLAYER_IMG_SIZE = new Vector2Int(200,200);
+    final static Vector2Int PLAYER_IMG_SIZE = new Vector2Int(20,20);
     static Pane GameObjectsPane ;
     static Double screenHeight ;
     final static int ROW_COUNT_MIN = 3, ROW_COUNT_MAX = 8;
@@ -44,7 +44,7 @@ public class GameApplication extends Application {
     final static int FOOD_COUNT_MIN = 1, FOOD_COUNT_MAX = 3;
     final static int FOOD_APPARITION_CHANCE = 50, INSECT_APPARITION_CHANCE = 100; //In percentage
 
-    final static Double SPACE_BETWEEN_ROW = 5.0, SPACE_BETWEEN_WATERLILIES = 3.0;
+    final static Double SPACE_BETWEEN_ROW = 50.0, SPACE_BETWEEN_WATERLILIES = 50.0;
 
     final static int MAX_TOUR_WITHOUT_EAT = 2;
 
