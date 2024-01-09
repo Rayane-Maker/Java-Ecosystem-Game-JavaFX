@@ -118,7 +118,7 @@ public class GameApplication extends Application {
 
 
         // Overlap - assembly grassPane and pondBGPane
-        StackPane stackPane = new StackPane(grassPane, PondPane);
+        StackPane stackPane = new StackPane(grassPane, PondPane, GameObjectsPane);
 
         Scene scene = new Scene (stackPane, 1000, 800);
         stage.setResizable(false);
