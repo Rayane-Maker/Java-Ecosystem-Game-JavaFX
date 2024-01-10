@@ -33,7 +33,7 @@ public class GameApplication extends Application {
     final static Double SPACE_BETWEEN_ROW = 40.0, SPACE_BETWEEN_WATERLILIES = 50.0;
 
 
-    final static String PLAYER_IMG_URL = "/final_frog_assis.png";
+    final static String PLAYER_IMG_URL = "/final_frog_idle.png";
 
     final static String FROG_FACE_IMG_URL = "/frog_face.png";
 
@@ -99,7 +99,7 @@ public class GameApplication extends Application {
 
         //gamePresentation();
         Image greenBubbleIm = new Image("/green_bubble.png");
-        ImageView imageView = new ImageView(grassTileIm);
+        ImageView imageView = new ImageView("/green_bubble.png");
         imageView.setFitWidth(100);
         imageView.setFitHeight(100);
         greenBubble.getChildren().add(imageView);
