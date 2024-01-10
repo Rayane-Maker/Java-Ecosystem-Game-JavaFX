@@ -9,4 +9,6 @@ module com.example.javafxproject {
 
     opens com.example.javafxproject to javafx.fxml;
     exports com.example.javafxproject;
+    exports com.example.javafxproject.GameClasses;
+    opens com.example.javafxproject.GameClasses to javafx.fxml;
 }

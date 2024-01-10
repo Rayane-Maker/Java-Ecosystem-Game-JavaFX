@@ -1,4 +1,4 @@
-package com.example.javafxproject;
+package com.example.javafxproject.GameClasses;
 
 /**
  * <b>This class inherits from Amphibian class and simulates a Frog.</b>
@@ -23,13 +23,11 @@ package com.example.javafxproject;
 public class Frog extends Amphibian{
 
     //Attributes
-
     public boolean isFroglet;
 
 
-
     //Constructors
-    Frog(String _name, double _ageInYears, double _tongueSpeed){
+    public Frog(String _name, double _ageInYears, double _tongueSpeed){
         super(_name, _ageInYears);
         this.tongueSpeed = _tongueSpeed;
     }

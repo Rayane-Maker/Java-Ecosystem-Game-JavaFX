@@ -1,4 +1,4 @@
-package com.example.javafxproject;
+package com.example.javafxproject.GameClasses;
 
 import ArrayUtil.RandomOperations;
 
@@ -21,6 +21,14 @@ public class Amphibian extends Animal implements Player {
         this.name = _name;
         this.age = 5;
         Amphibian.species = "Rare Pepe";
+    }
+
+    public double getTongueSpeed() {
+        return tongueSpeed;
+    }
+
+    public void setTongueSpeed(double tongueSpeed) {
+        this.tongueSpeed = tongueSpeed;
     }
 
     @Override

@@ -1,4 +1,4 @@
-package com.example.javafxproject;
+package com.example.javafxproject.GameClasses;
 
 /**
  * <b>This class inherits from Biologic class and simulates an animal.</b>
@@ -70,7 +70,7 @@ public class Animal extends Biologic {
 
         targetWaterlily.addAnimal(this);
         currentWaterlily = targetWaterlily;
-
+        updateAllGraphic();
     }
 
     /**

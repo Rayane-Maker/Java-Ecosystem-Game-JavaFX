@@ -1,4 +1,4 @@
-package com.example.javafxproject;
+package com.example.javafxproject.GameClasses;
 
 /**
  * <b>This class inherits from GameObject class and simulates a row of waterlilies.</b>
@@ -9,7 +9,7 @@ package com.example.javafxproject;
 
 public class Row extends GameObject{
 
-    protected Waterlily[] waterlilies;
+    public Waterlily[] waterlilies;
 
     public Row(Waterlily[] waterlilies) {
         super();

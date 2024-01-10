@@ -1,4 +1,4 @@
-package com.example.javafxproject;
+package com.example.javafxproject.GameClasses;
 
 /**
  * <b>This class inherits from StaticFood class and simulates a poo.</b>
@@ -16,7 +16,7 @@ package com.example.javafxproject;
 public class Poo extends StaticFood {
 
     static int DEFAULT_NUTRISCORE = 8;
-    Poo() {
+    public Poo() {
         super(DEFAULT_NUTRISCORE); // Call parent class constructor using super()
     }
 

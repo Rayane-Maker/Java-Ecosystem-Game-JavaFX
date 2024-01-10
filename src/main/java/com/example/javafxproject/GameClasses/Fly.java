@@ -1,4 +1,4 @@
-package com.example.javafxproject;
+package com.example.javafxproject.GameClasses;
 
 /**
  * <b>This class inherits from Insect class and simulates a fly.</b>
@@ -22,7 +22,7 @@ package com.example.javafxproject;
 public class Fly extends Insect{
 
     //Constructors
-    Fly(double _mass, double _speed){
+    public Fly(double _mass, double _speed){
         super(_mass, _speed);
         this.nutriscore = 2;
 
@@ -34,7 +34,7 @@ public class Fly extends Insect{
 
     }
 
-    Fly(){
+    public Fly(){
         super();
         this.nutriscore = 2;
 

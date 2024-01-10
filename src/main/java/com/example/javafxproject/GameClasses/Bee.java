@@ -1,9 +1,9 @@
-package com.example.javafxproject;
+package com.example.javafxproject.GameClasses;
 
 /**
- * <b>This class inherits from Insect class and simulates a dragonfly.</b>
+ * <b>This class inherits from Insect class and simulates a firefly.</b>
  * <p>
- * Dragonfly class redefine :
+ * Firefly class redefine :
  * <ul>
  * <li>eat() method.</li>
  * <li>grow() method.</li>
@@ -11,8 +11,8 @@ package com.example.javafxproject;
  * </ul>
  * </p>
  * <p>
- * Firefly inherits directly from Insect class which inherits
- * from Animal class.
+ * Firefly inherits directly from Insect class which
+ * inherits from Animal class.
  * </p>
  *
  *
@@ -20,24 +20,24 @@ package com.example.javafxproject;
  * @version 1.0
  */
 
-public class Dragonfly extends Insect{
+public class Bee extends Insect{
 
     //Constructors
-    Dragonfly(double _mass, double _speed){
+    public Bee(double _mass, double _speed){
         super(_mass, _speed);
-        this.nutriscore = 6;
-
+        this.nutriscore = -6;
     }
 
-    Dragonfly(double _mass){
+    Bee(double _mass){
+
         super(_mass);
-        this.nutriscore = 6;
+        this.nutriscore = -6;
 
     }
 
-    Dragonfly(){
+    Bee(){
         super();
-        this.nutriscore = 6;
+        this.nutriscore = -6;
 
     }
 
@@ -64,12 +64,13 @@ public class Dragonfly extends Insect{
     public String toString() {
         //return super.toString();
         if (this.mass <= 0){
-            return String.format("I'm dead, but I used to be a dragonfly with a speed of %.2f", this.speed);
+            return String.format("I'm dead, but I used to be a bee with a speed of %.2f", this.speed);
         }
 
-        return String.format("I'm a speedy dragonfly with %.2f speed and %.2f mass", speed, mass);
+        return String.format("I'm a speedy bee with %.2f speed and %.2f mass", speed, mass);
     }
 
+    //Firefly can eat dead animals but also static food
     /**
      * if the food is an Animal class instance, uses it as a variable and eats it
      * @param food
@@ -86,9 +87,10 @@ public class Dragonfly extends Insect{
     }
 
     /**
+     * Grow the Firefly.
      *
      * @param _deltaMass
-     *            Drive how grow the animal.
+     *            The amount of mass.
      */
     @Override
     public void grow(int _deltaMass){

@@ -1,4 +1,4 @@
-package com.example.javafxproject; /**
+package com.example.javafxproject.GameClasses; /**
  * <b>This class inherits from GameObject and simulates a waterlily.</b>
  * <p>
  * Fly class redefine :

@@ -3,6 +3,7 @@ package com.example.javafxproject;
 import Mathf.Vector2Double;
 import Mathf.Vector2Int;
 import StringUtil.StringColor;
+import com.example.javafxproject.GameClasses.*;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -27,14 +28,20 @@ import static java.lang.Math.random;
 public class GameApplication extends Application {
 
     final static String WATERLILIES_IMG_URL = "/waterlily_from_high.png";
-    final static Vector2Int WATERLILY_IMG_SIZE = new Vector2Int(20,20);
+    final static Vector2Int WATERLILY_IMG_SIZE = new Vector2Int(60,60);
+
+    final static Double SPACE_BETWEEN_ROW = 40.0, SPACE_BETWEEN_WATERLILIES = 50.0;
+
 
     final static String PLAYER_IMG_URL = "/final_frog_assis.png";
 
-    final static Vector2Int PLAYER_IMG_SIZE = new Vector2Int(20,20);
-    static Pane GameObjectsPane ;
-    static Double screenHeight ;
-    final static int ROW_COUNT_MIN = 3, ROW_COUNT_MAX = 8;
+    final static String FROG_FACE_IMG_URL = "/frog_face.png";
+
+
+    final static Vector2Int PLAYER_IMG_SIZE = new Vector2Int(40,40);
+    static Pane gameObjectsPane;
+    static Double screenWidth = 1000.0, screenHeight = 800.0;
+    final static int ROW_COUNT_MIN = 3, ROW_COUNT_MAX = 6;
     final static int WATERLILIES_COUNT_MIN = 2, WATERLILIES_COUNT_MAX = 5;
 
     final static int WATERLILIES_CAPACITY_MIN = 3, WATERLILIES_CAPACITY_MAX = 5;
@@ -43,8 +50,6 @@ public class GameApplication extends Application {
     final static int FOOD_TYPE_COUNT = 2;
     final static int FOOD_COUNT_MIN = 1, FOOD_COUNT_MAX = 3;
     final static int FOOD_APPARITION_CHANCE = 50, INSECT_APPARITION_CHANCE = 100; //In percentage
-
-    final static Double SPACE_BETWEEN_ROW = 50.0, SPACE_BETWEEN_WATERLILIES = 50.0;
 
     final static int MAX_TOUR_WITHOUT_EAT = 2;
 
@@ -66,11 +71,38 @@ public class GameApplication extends Application {
 
     static boolean gameFinished = false;
 
+
     private static boolean quitGame;
 
+    private static Pane greenBubble;
 
     @Override
     public void start(Stage stage) throws IOException {
+
+        //Pond content and player
+        onStart(stage);
+
+
+    }
+
+
+    public static void main(String[] args) {
+        launch();
+    }
+
+
+
+    /**
+     * Game initializations
+     */
+    public static void onStart(Stage stage) {
+
+        //gamePresentation();
+        Image greenBubbleIm = new Image("/green_bubble.png");
+        ImageView imageView = new ImageView(grassTileIm);
+        imageView.setFitWidth(100);
+        imageView.setFitHeight(100);
+        greenBubble.getChildren().add(imageView);
 
         Pane PondPane = new StackPane();
 
@@ -108,41 +140,12 @@ public class GameApplication extends Application {
         });
         PondPane.getChildren().addAll(pondBGImView);
 
-        GameObjectsPane = new StackPane();
-
-        screenHeight = 800.0;
-
-        //Pond content and player
-        onStart();
-
-
-
-        // Overlap - assembly grassPane and pondBGPane
-        StackPane stackPane = new StackPane(grassPane, PondPane, GameObjectsPane);
-
-        Scene scene = new Scene (stackPane, 1000, 800);
-        stage.setResizable(false);
-        stage.setTitle("Hello!");
-        stage.setScene(scene);
-        stage.show();
-    }
-
-
-    public static void main(String[] args) {
-        launch();
-    }
-
-
-
-    /**
-     * Game initializations
-     */
-    public static void onStart() {
-
-        //gamePresentation();
+        gameObjectsPane = new StackPane();
 
         /* // Generate and populate the pond (Automatic/Random approach) // */
         pond = GeneratePond();
+        println("Wat0 : "+String.valueOf(pond[0].waterlilies[0].imageView.getX()));
+
         println(String.format("There are %d waterlilies rows", pond.length));
 
         //Ask the player for a name for its amphibian character
@@ -151,6 +154,15 @@ public class GameApplication extends Application {
         String userInput = scanner.nextLine();
 
         playerInit(userInput, new Vector2Int(0,0),  1f/12, 15);
+
+        // Overlap - assembly grassPane and pondBGPane
+        StackPane stackPane = new StackPane(grassPane, PondPane, gameObjectsPane);
+
+        Scene scene = new Scene (stackPane, screenWidth, screenHeight);
+        stage.setResizable(false);
+        stage.setTitle("Pond Travel");
+        stage.setScene(scene);
+        stage.show();
 
     }
 
@@ -220,7 +232,7 @@ public class GameApplication extends Application {
         }
 
         //Check if the player loose the game
-        if (player.tongueSpeed == 0) {
+        if (player.getTongueSpeed() == 0) {
             loseGame();
         }
 
@@ -263,7 +275,7 @@ public class GameApplication extends Application {
     public static void playerInit(String userName, Vector2Int pondGridPosition, double ageInYears, int tongueSpeed) {
         player = new Frog(userName, ageInYears, tongueSpeed);
         player.move(pondGridPosition.y, pondGridPosition.x,  pond);
-        player.setImage(new Image(PLAYER_IMG_URL), GameObjectsPane, screenHeight, PLAYER_IMG_SIZE);
+        player.setImage(new Image(PLAYER_IMG_URL), gameObjectsPane, screenHeight, PLAYER_IMG_SIZE);
     }
 
 
@@ -279,14 +291,20 @@ public class GameApplication extends Application {
         //Rows of waterlilies
         int rowsCount = (int) rand(ROW_COUNT_MIN, ROW_COUNT_MAX);
         Row[] rows = new Row[rowsCount];
+        int center2center_spacebetweenWaterlily = (int) (SPACE_BETWEEN_WATERLILIES + WATERLILY_IMG_SIZE.x);
+        int center2center_spacebetweenRow = (int) (SPACE_BETWEEN_ROW + WATERLILY_IMG_SIZE.y);
+
         for (int rowId = 0; rowId < rowsCount; rowId++) {
 
             //Row waterlilies generation
-            int waterliliesCount = (int) rand(WATERLILIES_COUNT_MIN, WATERLILIES_COUNT_MAX + 1);
+            int waterliliesCount = 1;
+            if (rowId != 0) {
+                waterliliesCount = (int) rand(WATERLILIES_COUNT_MIN, WATERLILIES_COUNT_MAX + 1);
+            }
             Waterlily[] waterlilies = new Waterlily[waterliliesCount];
-            double posY = rowId * SPACE_BETWEEN_ROW;;
+            double posY = (rowId - (rowsCount - 1)/2.0)* center2center_spacebetweenRow + screenHeight/2.0;
             for (int wId = 0; wId < waterliliesCount; wId++) {
-                double posX = (wId + (waterliliesCount - 1) / 2.0) * SPACE_BETWEEN_WATERLILIES;
+                double posX = (wId - (waterliliesCount - 1) / 2.0) * center2center_spacebetweenWaterlily + screenWidth/2.0;
 
                 waterlilies[wId] = new Waterlily((int) rand(WATERLILIES_CAPACITY_MIN, WATERLILIES_CAPACITY_MAX), new Vector2Int(wId, rowId));
 
@@ -326,15 +344,14 @@ public class GameApplication extends Application {
                         default:
                             insect = new Fly();
                     }
-                    insect.position = new Vector2Double(posX, posY);
+                    insect.setPosition(posX, posY);
                     waterlilies[wId].addAnimal(insect);
                 }
 
                 //Set positions (for graphic version)
-                waterlilies[wId].position.x = posX;
-                waterlilies[wId].position.y = posY;
+                waterlilies[wId].setPosition(posX, posY);
 
-                waterlilies[wId].setImage(new Image(WATERLILIES_IMG_URL), GameObjectsPane, screenHeight, WATERLILY_IMG_SIZE);
+                waterlilies[wId].setImage(new Image(WATERLILIES_IMG_URL), gameObjectsPane, screenHeight, WATERLILY_IMG_SIZE);
 
             }
 
@@ -342,8 +359,8 @@ public class GameApplication extends Application {
             rows[rowId] = new Row(waterlilies);
 
             //Set position (for graphic version)
-            rows[rowId].position.x = 0.0;
-            rows[rowId].position.y = rowId * SPACE_BETWEEN_ROW;
+            rows[rowId].setX(screenWidth / 2);
+            rows[rowId].setY(rowId * SPACE_BETWEEN_ROW);
 
         }
         return rows;
@@ -409,7 +426,7 @@ public class GameApplication extends Application {
             }
 
             if (animalToEat != null) {
-                score += animalToEat.isDead() ? 0 : animalToEat.nutriscore;
+                score += animalToEat.isDead() ? 0 : (int) animalToEat.getNutriscore();
                 player.eat(animalToEat);
             }
         }

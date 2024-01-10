@@ -1,4 +1,4 @@
-package com.example.javafxproject; /**
+package com.example.javafxproject.GameClasses; /**
  * <b>This class inherits from GameObject class and regroups all objects that can be eaten.</b>
  *
  * @author Theo Thuiller

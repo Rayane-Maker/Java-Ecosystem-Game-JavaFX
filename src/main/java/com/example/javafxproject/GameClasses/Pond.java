@@ -1,4 +1,4 @@
-package com.example.javafxproject;
+package com.example.javafxproject.GameClasses;
 
 import Mathf.Vector2Double;
 import Mathf.Vector2Int;

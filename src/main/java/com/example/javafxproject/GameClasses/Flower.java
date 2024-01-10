@@ -1,4 +1,4 @@
-package com.example.javafxproject;
+package com.example.javafxproject.GameClasses;
 
 /**
  * <b>This class inherits from StaticFood class and simulates a flower.</b>
@@ -18,7 +18,7 @@ public class Flower extends StaticFood {
 
     static int DEFAULT_NUTRISCORE = 4;
 
-    Flower() {
+    public Flower() {
         super(DEFAULT_NUTRISCORE); // Call parent class constructor using super()
     }
 
