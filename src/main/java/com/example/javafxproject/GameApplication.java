@@ -98,11 +98,9 @@ public class GameApplication extends Application {
     public static void onStart(Stage stage) {
 
         //gamePresentation();
-        Image greenBubbleIm = new Image("/green_bubble.png");
-        ImageView imageView = new ImageView("/green_bubble.png");
-        imageView.setFitWidth(100);
-        imageView.setFitHeight(100);
-        greenBubble.getChildren().add(imageView);
+
+
+
 
         Pane PondPane = new StackPane();
 
@@ -155,8 +153,16 @@ public class GameApplication extends Application {
 
         playerInit(userInput, new Vector2Int(0,0),  1f/12, 15);
 
-        // Overlap - assembly grassPane and pondBGPane
-        StackPane stackPane = new StackPane(grassPane, PondPane, gameObjectsPane);
+        greenBubble = new Pane();
+        Image greenBubbleIm = new Image("/green_bubble.png");
+        ImageView greenBubbleImView = new ImageView(greenBubbleIm);
+        greenBubbleImView.setFitWidth(screenWidth);
+        greenBubbleImView.setFitHeight(screenHeight/5);
+        greenBubble.getChildren().add(greenBubbleImView);
+        StackPane bubblePane = new StackPane(greenBubble);
+
+        // Overlap - assembly panes
+        StackPane stackPane = new StackPane(grassPane, PondPane, gameObjectsPane, bubblePane);
 
         Scene scene = new Scene (stackPane, screenWidth, screenHeight);
         stage.setResizable(false);
