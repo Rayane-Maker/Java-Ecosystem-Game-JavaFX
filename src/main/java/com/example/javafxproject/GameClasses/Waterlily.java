@@ -18,7 +18,15 @@ package com.example.javafxproject.GameClasses; /**
  * @version 1.0
  */
 
+import Mathf.Vector2Double;
 import Mathf.Vector2Int;
+import javafx.animation.Interpolator;
+import javafx.animation.RotateTransition;
+import javafx.scene.image.Image;
+import javafx.scene.input.MouseEvent;
+import javafx.util.Duration;
+
+import java.util.Objects;
 
 public class Waterlily extends GameObject {
     private Boolean isFree;
@@ -29,6 +37,11 @@ public class Waterlily extends GameObject {
 
     private Vector2Int pondGridPosition;
 
+    //GFX
+    final static String WATERLILIES_IMG_URL = "/waterlily_from_high.png";
+    final static Vector2Double WATERLILY_IMG_SIZE = new Vector2Double(40,40);
+
+
     public Waterlily(int capacity, Vector2Int pondGridPosition) {
         super(); // Call parent class constructor using super()
         this.isFree = true;
@@ -37,6 +50,19 @@ public class Waterlily extends GameObject {
         this.foods = foods;
         this.pondGridPosition = pondGridPosition;
         this.animals = animals;
+        this.size = WATERLILY_IMG_SIZE;
+        if (!Objects.equals(WATERLILIES_IMG_URL, "")) {
+            setImage(new Image(WATERLILIES_IMG_URL));
+        }
+        pane.setOnMousePressed((MouseEvent e) -> {
+            System.out.println("Wat clicked !");
+            RotateTransition rotate = new RotateTransition(Duration.seconds(1), pane);
+            rotate.setToAngle(180);
+            rotate.setInterpolator(Interpolator.LINEAR);
+            rotate.setAutoReverse(true);
+            rotate.setCycleCount(2);
+            rotate.play();
+        });
     }
 
     public Vector2Int getPondGridPosition() {
@@ -46,6 +72,8 @@ public class Waterlily extends GameObject {
     public Animal[] getAnimals() {
         return animals;
     }
+
+
 
     public void displayInfo() {
         System.out.println("I am a Waterlily, I have" + this.occupentCount + "Amphibians on me, and my capacity is" + this.capacity + "!");
@@ -111,7 +139,6 @@ public class Waterlily extends GameObject {
             }
             this.animals = newAnimals;
 
-            animal.position = this.position;
             animal.pondGridPosition = this.pondGridPosition;
             return true;
         }
@@ -139,4 +166,5 @@ public class Waterlily extends GameObject {
         }
         return false;
     }
+
 }

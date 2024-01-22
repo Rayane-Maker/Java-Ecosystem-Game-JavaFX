@@ -4,17 +4,27 @@ import Mathf.Vector2Double;
 import Mathf.Vector2Int;
 import StringUtil.StringColor;
 import com.example.javafxproject.GameClasses.*;
+import javafx.animation.*;
 import javafx.application.Application;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.TilePane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -24,24 +34,16 @@ import java.util.Scanner;
 import java.util.stream.IntStream;
 
 import static java.lang.Math.random;
+import static java.lang.Math.round;
 
 public class GameApplication extends Application {
 
-    final static String WATERLILIES_IMG_URL = "/waterlily_from_high.png";
-    final static Vector2Int WATERLILY_IMG_SIZE = new Vector2Int(60,60);
 
+    static Pane gameObjectsPane, uiPane;
+    static Double screenWidth = 1000.0, screenHeight = 800.0;
+    final static int ROW_COUNT_MIN = 4, ROW_COUNT_MAX = 9;
     final static Double SPACE_BETWEEN_ROW = 40.0, SPACE_BETWEEN_WATERLILIES = 50.0;
 
-
-    final static String PLAYER_IMG_URL = "/final_frog_idle.png";
-
-    final static String FROG_FACE_IMG_URL = "/frog_face.png";
-
-
-    final static Vector2Int PLAYER_IMG_SIZE = new Vector2Int(40,40);
-    static Pane gameObjectsPane;
-    static Double screenWidth = 1000.0, screenHeight = 800.0;
-    final static int ROW_COUNT_MIN = 3, ROW_COUNT_MAX = 6;
     final static int WATERLILIES_COUNT_MIN = 2, WATERLILIES_COUNT_MAX = 5;
 
     final static int WATERLILIES_CAPACITY_MIN = 3, WATERLILIES_CAPACITY_MAX = 5;
@@ -74,7 +76,18 @@ public class GameApplication extends Application {
 
     private static boolean quitGame;
 
-    private static Pane greenBubble;
+    private static Pane insectsBubble;
+
+    static Text playerStateText = new Text(100, 50, "");
+    static Pane playerTextPane = new StackPane();
+
+
+    static Text insectsText = new Text(100, 50, "");
+    static Pane insectsTextPane = new StackPane();
+    static Font font = Font.font("Arial", FontWeight.BOLD, 14);
+
+    
+    
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -140,29 +153,131 @@ public class GameApplication extends Application {
 
         gameObjectsPane = new StackPane();
 
+        /* ////////////// HUD ///////////////// */
+        uiPane = new StackPane();
+        
+        //Start Dialog Box
+        Text emailText = new Text("Enter your name");
+        TextField emailTF = new TextField();
+        Button startButton = new Button("Start");
+        Button clearB = new Button("Quit");
+        GridPane dialogBox = new GridPane();
+        dialogBox.setMinSize(400, 200);
+        dialogBox.setMaxSize(400, 200);
+
+//Setting the padding between columns of the GridPane
+        dialogBox.setPadding(new Insets(10, 10, 10, 10)); //margins around the whole grid (top/right/bottom/left)
+//Setting the vertical and horizontal gaps between the columns
+        dialogBox.setVgap(5);
+        dialogBox.setHgap(5);
+//Setting the Grid alignment
+        dialogBox.setAlignment(Pos.CENTER);
+//Arranging all the nodes in the grid
+        dialogBox.add(emailText, 0, 0);//col:0, row:0
+        dialogBox.add(emailTF, 1, 0);//col:1, row:0
+        dialogBox.add(startButton, 0, 2);//col:0, row:2
+        dialogBox.add(clearB, 1, 2);//col:1, row:2
+//Styling nodes 
+        startButton.setStyle("-fx-background-color: Grey; -fx-text-fill: white;");
+        clearB.setStyle("-fx-background-color: Grey; -fx-text-fill: white;");
+        emailText.setStyle("-fx-font: normal bold 20px 'serif' ");
+        dialogBox.setStyle("-fx-background-color: ALICEBLUE;");
+
+        startButton.setOnAction(event -> {
+            // Toggle the visibility when the button is clicked
+            // Set an event handler for the button
+                System.out.println("Button clicked!");
+            dialogBox.setVisible(false);
+            displayIndications();
+        });
+
+
+        //playerStateText.
+        //playerStateText.setFont(font);
+        //playerStateText.setFill(Color.WHITE);
+        //playerTextPane.getChildren().addAll(playerStateText);
+        playerTextPane.setMaxSize(100,100);
+        playerStateText.setLayoutX(50); // Set X-coordinate
+        playerStateText.setLayoutY(30); // Set Y-coordinate
+        playerStateText.prefWidth(100); // Set width and height
+        playerStateText.prefWidth(50); // Set width and height
+
+        //playerTextPane.setTranslateY(screenHeight - 100);
+
+        insectsText.setFont(font);
+        insectsText.setFill(Color.WHITE);
+
+
+        //Pond
+        Image pondBGIm1 = new Image("/PondBG.png");
+        ImageView pondBGIm1V = new ImageView(pondBGIm1);
+        pondBGIm1V.setPreserveRatio(true);
+        pondBGIm1V.setFitWidth(700);
+        pondBGIm1V.setX(0);
+        pondBGIm1V.setY(0);
+        pondBGIm1V.setRotate(180);
+        //insectsTextPane.getChildren().add(pondBGIm1V);
+
+        insectsTextPane.getChildren().add(insectsText);
+
+
         /* // Generate and populate the pond (Automatic/Random approach) // */
         pond = GeneratePond();
-        println("Wat0 : "+String.valueOf(pond[0].waterlilies[0].imageView.getX()));
 
         println(String.format("There are %d waterlilies rows", pond.length));
 
         //Ask the player for a name for its amphibian character
-        println("\nEnter your name : \n");
-        Scanner scanner = new Scanner(System.in);
-        String userInput = scanner.nextLine();
+        String userInput = "reesrqg";
 
         playerInit(userInput, new Vector2Int(0,0),  1f/12, 15);
 
-        greenBubble = new Pane();
-        Image greenBubbleIm = new Image("/green_bubble.png");
-        ImageView greenBubbleImView = new ImageView(greenBubbleIm);
-        greenBubbleImView.setFitWidth(screenWidth);
-        greenBubbleImView.setFitHeight(screenHeight/5);
-        greenBubble.getChildren().add(greenBubbleImView);
-        StackPane bubblePane = new StackPane(greenBubble);
+        /*
+        Frog f1 = new Frog("h,,", (double) 1 /12, 26.0);
+        f1.setPosition((double) 400, (double) 400);
+        f1.pane.setTranslateX(0);
+        f1.pane.setTranslateY(0);
+
+         */
+
+
+        gameObjectsPane.setOnMousePressed((MouseEvent e) -> {
+            System.out.println("pane clicked ! " + e.getSceneX() + ", "+e.getSceneY());
+        });
+
+
+        GridPane insectsBubble = new GridPane();
+        insectsBubble.setMaxSize(screenWidth, screenHeight/5);
+        insectsBubble.setMinSize(screenWidth, screenHeight/5);
+        Image insectsBubbleIm = new Image("/blue_bubble.png");
+        ImageView insectsBubbleImView = new ImageView(insectsBubbleIm);
+        insectsBubbleImView.setFitWidth(screenWidth);
+        insectsBubbleImView.setFitHeight(screenHeight/5);
+        insectsBubble.getChildren().addAll(insectsBubbleImView);
+        insectsBubble.setTranslateX(0);
+        insectsBubble.setTranslateY(-screenHeight/2 + screenHeight/10);
+        //Setting the padding between columns of the GridPane
+        insectsBubble.setPadding(new Insets(10, 10, 10, 10)); //margins around the whole grid (top/right/bottom/left)
+//Setting the vertical and horizontal gaps between the columns
+        insectsBubble.setVgap(5);
+        insectsBubble.setHgap(5);
+//Setting the Grid alignment
+        insectsBubble.setAlignment(Pos.CENTER);
+//Arranging all the nodes in the grid
+        Pane insectTextC = new Pane();
+
+        insectTextC.getChildren().add(insectsText);
+        insectTextC.setTranslateX(10);
+        insectTextC.setTranslateY(10);
+
+        insectsBubble.add(insectTextC, 0, 0);//col:0, row:0
+
+
+        uiPane.getChildren().addAll(insectsBubble, dialogBox);
+        uiPane.setPickOnBounds(false);
+
 
         // Overlap - assembly panes
-        StackPane stackPane = new StackPane(grassPane, PondPane, gameObjectsPane, bubblePane);
+        StackPane stackPane = new StackPane(grassPane, PondPane, gameObjectsPane, uiPane);
 
         Scene scene = new Scene (stackPane, screenWidth, screenHeight);
         stage.setResizable(false);
@@ -192,7 +307,7 @@ public class GameApplication extends Application {
                 if (canJump) {
                     int waterlilyChoice = scanner.nextInt();
                     if (waterlilyChoice <= nextRow.waterlilies.length && waterlilyChoice > 0) {
-                        player.move(player.pondGridPosition.y + 1, waterlilyChoice - 1, pond);
+                        player.move(player.pondGridPosition.y + 1, waterlilyChoice - 1, pond, 0.4);
                         canEat = true;
                         noEatCount++;
                         validInput = true;
@@ -280,8 +395,9 @@ public class GameApplication extends Application {
      */
     public static void playerInit(String userName, Vector2Int pondGridPosition, double ageInYears, int tongueSpeed) {
         player = new Frog(userName, ageInYears, tongueSpeed);
-        player.move(pondGridPosition.y, pondGridPosition.x,  pond);
-        player.setImage(new Image(PLAYER_IMG_URL), gameObjectsPane, screenHeight, PLAYER_IMG_SIZE);
+        player.move(pondGridPosition.y, pondGridPosition.x,  pond, 0);
+        println(""+player.pane.getHeight());
+
     }
 
 
@@ -297,20 +413,20 @@ public class GameApplication extends Application {
         //Rows of waterlilies
         int rowsCount = (int) rand(ROW_COUNT_MIN, ROW_COUNT_MAX);
         Row[] rows = new Row[rowsCount];
-        int center2center_spacebetweenWaterlily = (int) (SPACE_BETWEEN_WATERLILIES + WATERLILY_IMG_SIZE.x);
-        int center2center_spacebetweenRow = (int) (SPACE_BETWEEN_ROW + WATERLILY_IMG_SIZE.y);
+        int spaceBetweenWaterlilyCenters = (int) (SPACE_BETWEEN_WATERLILIES + 40);
+        int spaceBetweenRowCenters = (int) (SPACE_BETWEEN_ROW + 40);
 
         for (int rowId = 0; rowId < rowsCount; rowId++) {
 
             //Row waterlilies generation
             int waterliliesCount = 1;
-            if (rowId != 0) {
+            if (rowId != 0 && rowId != rowsCount - 1) {
                 waterliliesCount = (int) rand(WATERLILIES_COUNT_MIN, WATERLILIES_COUNT_MAX + 1);
             }
             Waterlily[] waterlilies = new Waterlily[waterliliesCount];
-            double posY = (rowId - (rowsCount - 1)/2.0)* center2center_spacebetweenRow + screenHeight/2.0;
+            double posY = (rowId - (rowsCount - 1)/2.0) * spaceBetweenRowCenters + screenHeight;
             for (int wId = 0; wId < waterliliesCount; wId++) {
-                double posX = (wId - (waterliliesCount - 1) / 2.0) * center2center_spacebetweenWaterlily + screenWidth/2.0;
+                double posX = (wId - (waterliliesCount - 1) / 2.0) * spaceBetweenWaterlilyCenters;
 
                 waterlilies[wId] = new Waterlily((int) rand(WATERLILIES_CAPACITY_MIN, WATERLILIES_CAPACITY_MAX), new Vector2Int(wId, rowId));
 
@@ -357,16 +473,19 @@ public class GameApplication extends Application {
                 //Set positions (for graphic version)
                 waterlilies[wId].setPosition(posX, posY);
 
-                waterlilies[wId].setImage(new Image(WATERLILIES_IMG_URL), gameObjectsPane, screenHeight, WATERLILY_IMG_SIZE);
-
+                var ref = new Object() {
+                    int val;
+                };
+                ref.val = wId;
+                waterlilies[wId].pane.setOnMousePressed((MouseEvent e) -> handleMousePressed(e, ref.val));
             }
 
             //Populate row of generated waterlilies
             rows[rowId] = new Row(waterlilies);
 
-            //Set position (for graphic version)
-            rows[rowId].setX(screenWidth / 2);
-            rows[rowId].setY(rowId * SPACE_BETWEEN_ROW);
+            //Set size and position (for graphic version)
+            //rows[rowId].setSize((double) (spaceBetweenWaterlilyCenters *  (waterliliesCount - 1) + 40), 40.0);
+            //rows[rowId].setPosition(screenWidth / 2, posY-20);
 
         }
         return rows;
@@ -388,21 +507,25 @@ public class GameApplication extends Application {
     }
 
     public static void displayPlayerState(){
-        System.out.print(StringColor.ANSI_GREEN);
+
+        playerStateText.setText(String.format("Score : +%d",score) + "\n"
+                + String.format("Age : +%d",player.age) + "\n"
+                + String.format("TongueSpeed : +%.2f",player.getTongueSpeed())
+        );
         System.out.print(player);
-        println(String.format("\nI am at the row number %d. I hear voices coming from the next row: \n", player.pondGridPosition.y + 1));
         System.out.print(StringColor.ANSI_RESET);
     }
 
     public static void displayPlayerObservations(){
         String[][] allVoices = player.observeForward(pond);
+        StringBuilder voicesText = new StringBuilder();
         for (String[] waterlilyVoices : allVoices) {
             for (String voice : waterlilyVoices) {
-                System.out.print(StringColor.ANSI_BLUE);
-                println(voice);
-                System.out.print(StringColor.ANSI_RESET);
+                voicesText.append(voice).append("\n");
             }
         }
+        insectsText.setText(voicesText.toString());
+
     }
 
 
@@ -414,6 +537,30 @@ public class GameApplication extends Application {
     }
 
 
+    public static void move(int waterlilyChoice) {
+        if (canJump) {
+            player.move(player.pondGridPosition.y + 1, waterlilyChoice, pond, 0.25);
+
+
+            //Give jump effect
+            /*
+            ScaleTransition scale = new ScaleTransition(Duration.seconds(0.2), player.pane.getChildren().getFirst());
+            scale.setToX(1.3);
+            scale.setToY(1.3);
+            scale.setAutoReverse(true);
+            scale.setCycleCount(2);
+            scale.play();
+            scale.setOnFinished((actionEvent)->
+                    {scale.stop();}
+            );
+             */
+
+            canEat = true;
+            noEatCount++;
+        } else {
+            println("It's time to eat ! You cannot jump !");
+        }
+    }
 
     //Player actions
     public static void eatAction(){
@@ -483,8 +630,24 @@ public class GameApplication extends Application {
         return success;
     }
 
+    public static void AddGameObject(GameObject gameObject){
+        if (!gameObjectsPane.getChildren().contains(gameObject.pane)) {
+            gameObjectsPane.getChildren().add(gameObject.pane);
+        }
+        gameObject.screenHeight = screenHeight;
+    }
 
+    private static void handleMousePressed(MouseEvent event, int value) {
+        Double mouseX =  event.getSceneX() - screenWidth/2.0;
+        Double mouseY =  event.getSceneX() - screenHeight/2.0;
+        int wID = (int) ((int) (mouseX - pond[player.pondGridPosition.y+1].waterlilies[0].getX() + 40)/(40+SPACE_BETWEEN_WATERLILIES));
+        //if (mouseY < player.pane.getTranslateY() ){
+            println("ref"+wID);
+            move(wID);
+        displayIndications();
 
+        //}
+    }
 
 
 

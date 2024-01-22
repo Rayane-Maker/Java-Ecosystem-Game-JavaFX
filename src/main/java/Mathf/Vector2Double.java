@@ -32,7 +32,43 @@ public class Vector2Double {
         this.y = y;
     }
 
-    public static Double distance (Vector2Double vec1, Vector2Double vec2){
-        return Math.sqrt((vec1.x - vec2.x) * (vec1.x - vec2.x) + (vec1.y - vec2.y) * (vec1.y - vec2.y));
+    public static Vector2Double add(Vector2Double a, Vector2Double b) {
+        return new Vector2Double(a.x + b.x, a.y + b.y);
+    }
+
+    public static Vector2Double subtract(Vector2Double a, Vector2Double b) {
+        return new Vector2Double(a.x - b.x, a.y - b.y);
+    }
+
+    public static Vector2Double multiply(Vector2Double v, double scalar) {
+        return new Vector2Double(v.x*scalar, v.y*scalar);
+    }
+    public static Vector2Double divide(Vector2Double v, double scalar) {
+        return new Vector2Double(v.x/scalar, v.y/scalar);
+    }
+
+    public Vector2Double add(Vector2Double v) {
+        return new Vector2Double(x + v.x, y + v.y);
+    }
+
+    public Vector2Double subtract(Vector2Double v) {
+        return new Vector2Double(x - v.x, y - v.y);
+    }
+
+    public Vector2Double multiply(double scalar) {
+        return new Vector2Double(this.x * scalar, this.y * scalar);
+    }
+
+
+    public Vector2Double divide(double scalar) {
+        return new Vector2Double(this.x / scalar, this.y / scalar);
+    }
+
+    public Double getMagnitude (){
+        return Math.sqrt(x*x + y*y);
+    }
+
+    public static Double distance (Vector2Double v1, Vector2Double v2){
+        return Math.sqrt((v1.x - v2.x) * (v1.x - v2.x) + (v1.y - v2.y) * (v1.y - v2.y));
     }
 }

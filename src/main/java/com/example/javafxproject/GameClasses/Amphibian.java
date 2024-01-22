@@ -1,6 +1,12 @@
 package com.example.javafxproject.GameClasses;
 
 import ArrayUtil.RandomOperations;
+import Mathf.Vector2Double;
+import javafx.scene.input.MouseEvent;
+
+import java.util.Objects;
+
+import static com.example.javafxproject.GameApplication.eatAction;
 
 public class Amphibian extends Animal implements Player {
 
@@ -8,6 +14,8 @@ public class Amphibian extends Animal implements Player {
 
     static public String species;
     protected double tongueSpeed;
+
+    public GameObject tongueObj;
 
 
     //Constructors
@@ -21,6 +29,15 @@ public class Amphibian extends Animal implements Player {
         this.name = _name;
         this.age = 5;
         Amphibian.species = "Rare Pepe";
+        tongueObj = new Tongue();
+        tongueObj.setParent(this);
+        tongueObj.localPosition = new Vector2Double(-35/2 + tongueObj.size.x/2,0.0);
+        pane.setOnMousePressed((MouseEvent e) -> {
+            System.out.println("Amphibian clicked !");
+            tongueObj.smoothScaleTo(new Vector2Double(1.0,50.0), 0.2, true, false);
+            setRotation(0);
+            eatAction();
+        });
     }
 
     public double getTongueSpeed() {
@@ -65,6 +82,14 @@ public class Amphibian extends Animal implements Player {
     @Override
     public String toString() {
         return String.format("My name is %s and I’m a rare amphibian. I’m %d months old and my tongue has a speed of %.2f.", name, age, tongueSpeed);
+    }
+
+    @Override
+    public void move(int rowID, int waterlilyID, Row[] pond, double duration) {
+        super.move(rowID, waterlilyID, pond, duration);
+        if (duration > 0.1) {
+            smoothScaleTo(new Vector2Double(1.5, 1.5), duration / 2, true, false);
+        }
     }
 
     /**

@@ -1,5 +1,7 @@
 package com.example.javafxproject.GameClasses;
 
+import kotlin.math.UMathKt;
+
 /**
  * <b>This class inherits from Biologic class and simulates an animal.</b>
  * <p>
@@ -27,6 +29,8 @@ public class Animal extends Biologic {
     protected double speed;
 
     public Waterlily currentWaterlily;
+
+
 
     public  Animal(){
         super(); // Call parent class constructor using super()
@@ -59,7 +63,7 @@ public class Animal extends Biologic {
      * @param waterlilyID
      * @param pond
      */
-    public void move(int rowID, int waterlilyID, Row[] pond) {
+    public void move(int rowID, int waterlilyID, Row[] pond, double duration) {
 
         Waterlily targetWaterlily = pond[rowID].waterlilies[waterlilyID];
 
@@ -70,7 +74,24 @@ public class Animal extends Biologic {
 
         targetWaterlily.addAnimal(this);
         currentWaterlily = targetWaterlily;
+
+        if (duration > 0.1) {
+            smoothTranslateTo(targetWaterlily.position, duration);
+        }else{
+            setPosition(targetWaterlily.position.x, targetWaterlily.position.y);
+        }
         updateAllGraphic();
+    }
+
+    @Override
+    public void transformUpdate(){
+        super.transformUpdate();
+        if (this.currentSpeed.getMagnitude() > 0){
+            setRotation(180*Math.atan2(currentSpeed.x, currentSpeed.y)/Math.PI);
+        }
+        else{
+            setRotation(0);
+        }
     }
 
     /**
@@ -96,11 +117,12 @@ public class Animal extends Biologic {
     }
 
 
-
-
     public boolean isDead(){
         return this.mass <= 0;
     }
+
+
+
 
     @Override
     public String toString() {

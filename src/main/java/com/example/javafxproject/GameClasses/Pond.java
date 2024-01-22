@@ -99,7 +99,7 @@ public class Pond {
                 if (canJump) {
                     int waterlilyChoice = scanner.nextInt();
                     if (waterlilyChoice <= nextRow.waterlilies.length && waterlilyChoice > 0) {
-                        player.move(player.pondGridPosition.y + 1, waterlilyChoice - 1, pond);
+                        player.move(player.pondGridPosition.y + 1, waterlilyChoice - 1, pond, 0.4);
                         canEat = true;
                         noEatCount++;
                         validInput = true;
@@ -187,7 +187,7 @@ public class Pond {
      */
     public static void playerInit(String userName, Vector2Int pondGridPosition, double ageInYears, int tongueSpeed) {
         player = new Frog(userName, ageInYears, tongueSpeed);
-        player.move(pondGridPosition.y, pondGridPosition.x,  pond);
+        player.move(pondGridPosition.y, pondGridPosition.x,  pond, 0);
     }
 
 

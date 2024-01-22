@@ -1,5 +1,17 @@
 package com.example.javafxproject.GameClasses;
 
+import Mathf.Vector2Double;
+import Mathf.Vector2Int;
+import javafx.animation.Interpolator;
+import javafx.animation.RotateTransition;
+import javafx.animation.ScaleTransition;
+import javafx.animation.TranslateTransition;
+import javafx.scene.image.Image;
+import javafx.scene.input.MouseEvent;
+import javafx.util.Duration;
+
+import java.util.Objects;
+
 /**
  * <b>This class inherits from Amphibian class and simulates a Frog.</b>
  * <p>
@@ -24,13 +36,35 @@ public class Frog extends Amphibian{
 
     //Attributes
     public boolean isFroglet;
+    final static String FROG_IMG_URL = "/final_frog_idle.png";
 
+    final static Vector2Double FROG_SIZE = new Vector2Double(35,35);
 
     //Constructors
     public Frog(String _name, double _ageInYears, double _tongueSpeed){
         super(_name, _ageInYears);
         this.tongueSpeed = _tongueSpeed;
+        this.size = FROG_SIZE;
+        if (!Objects.equals(FROG_IMG_URL, "")) {
+            setImage(new Image(FROG_IMG_URL));
+        }
+
+
     }
+
+
+    @Override
+    public void transformUpdate(){
+        super.transformUpdate();
+        if (this.currentSpeed.getMagnitude() > 0){
+            setImage(new Image("/final_frog_jump.png"));
+        }
+        else{
+            setImage(new Image("/final_frog_idle.png"));
+            setRotation(0);
+        }
+    }
+
     Frog(String _name, double ageInYears){
         super(_name);
         this.age = (int)(ageInYears * 12);
@@ -40,6 +74,8 @@ public class Frog extends Amphibian{
         super(_name);
         this.tongueSpeed = 5;
     }
+
+
 
 
     //Setters
@@ -77,7 +113,7 @@ public class Frog extends Amphibian{
         age += _deltaAge;
 
         //Constrain tongue speed
-        tongueSpeed = tongueSpeed < 0 ? 0 : tongueSpeed;
+        tongueSpeed = tongueSpeed < 5 ? 5 : tongueSpeed;
 
         //Update froglet status
         isFroglet = age > 1 && age < 7;
